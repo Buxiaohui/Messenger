@@ -1,7 +1,7 @@
 package bxh.msn.factory;
 
 import androidx.annotation.NonNull;
-import bnav.b.msn.BuildConfig;
+import bxh.msn.BuildConfig;
 
 public abstract class StateVerifier {
     private static final boolean DEBUG = false;
