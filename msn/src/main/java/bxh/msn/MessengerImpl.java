@@ -6,13 +6,12 @@ package bxh.msn;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.baidu.navisdk.util.common.LogUtil;
-import com.baidu.navisdk.util.worker.loop.BNMainLooperHandler;
-
+import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import androidx.annotation.NonNull;
+import bxh.msn.utils.LogUtils;
 
 /**
  * Created by buxiaohui on 2018/8/9.
@@ -23,10 +22,10 @@ public class MessengerImpl implements IMessenger {
     private static final int INNER_MSG_ID = 171011;
     private ConcurrentHashMap<String, IMsgHandler> msgHandlerHashMap =
             new ConcurrentHashMap<>();
-    BNMainLooperHandler mBnMainLooperHandler = new BNMainLooperHandler("") {
+    private Handler mBnMainLooperHandler = new Handler() {
         @Override
-        public void onMessage(Message msg) {
-            super.onMessage(msg);
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
             if (msg.what == INNER_MSG_ID) {
                 handle((MsgTX) msg.obj);
             }
@@ -92,15 +91,15 @@ public class MessengerImpl implements IMessenger {
 
     private void handle(final IMsgHandler handler, final MsgTX msgTX) {
         if (msgTX == null) {
-            if (LogUtil.LOGGABLE) {
-                LogUtil.e(TAG, "handle,msg is null");
+            if (LogUtils.LOGGABLE) {
+                LogUtils.e(TAG, "handle,msg is null");
             }
             return;
         }
 
         if (handler == null) {
-            if (LogUtil.LOGGABLE) {
-                LogUtil.e(TAG, "handle,handler is null");
+            if (LogUtils.LOGGABLE) {
+                LogUtils.e(TAG, "handle,handler is null");
             }
             return;
         }
@@ -110,7 +109,7 @@ public class MessengerImpl implements IMessenger {
     @Override
     public MsgRX sendMsgSync(@NonNull MsgTX msgTX) {
         String target = msgTX.getTarget();
-        if (TextUtils.isEmpty(target) && LogUtil.LOGGABLE) {
+        if (TextUtils.isEmpty(target) && LogUtils.LOGGABLE) {
             throw new IllegalArgumentException("sendMsgSync,target invalid");
         }
         if (target != null && msgHandlerHashMap != null && msgHandlerHashMap.containsKey(target)
@@ -122,8 +121,8 @@ public class MessengerImpl implements IMessenger {
                 return msgRX;
             }
         } else {
-            if (LogUtil.LOGGABLE) {
-                LogUtil.e(TAG, "target:" + target);
+            if (LogUtils.LOGGABLE) {
+                LogUtils.e(TAG, "target:" + target);
             }
         }
         if (msgTX != null) {
