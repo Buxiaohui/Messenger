@@ -1,0 +1,2 @@
+include ':app', ':msn'
+rootProject.name='Messenger'
